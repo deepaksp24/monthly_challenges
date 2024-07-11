@@ -16,6 +16,17 @@ from django.urls import reverse
 # def march(request):
 #     return HttpResponse("focus on yourself")
 
+def index(request):
+    list_items = ""
+    months = list(mothly_challenges.keys())
+    for month in months:
+        captitalized_month = month.capitalize()
+        month_path = reverse("month-challenge", args=[month])
+        list_items += f"<li><a href= \"{month}\">{captitalized_month}</a></li>"
+    response_data = f"<ol>{list_items}</ol>"
+    return HttpResponse(response_data)
+
+
 mothly_challenges = {
     "jan": "full motivation",
     "feb": "starting a workouts",
