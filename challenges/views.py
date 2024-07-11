@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.urls import reverse
 
 # Create your views here.
 
@@ -15,14 +16,25 @@ from django.http import HttpResponse, HttpResponseNotFound
 # def march(request):
 #     return HttpResponse("focus on yourself")
 
+mothly_challenges = {
+    "jan": "full motivation",
+    "feb": "starting a workouts",
+    "mar": "walking",
+    "apr": "breathing",
+}
+
+
+def mothly_challenge_by_number(request, month):
+    months = list(mothly_challenges.keys())
+    forward_months = months[month-1]
+    redirect_path = reverse("month-challenge", args=[forward_months])
+    return HttpResponseRedirect(redirect_path)
+
 
 def monthly_challenge(request, month):
-    if month == 'january':
-        challenge_test = "full motivation month"
-    elif month == 'february':
-        challenge_test = "walk atleast 20minutes a day"
-    elif month == 'march':
-        challenge_test = "do somthing produvtive"
-    else:
-        return HttpResponseNotFound("this month is not supported")
-    return HttpResponse(challenge_test)
+    try:
+        challenge_text = mothly_challenges[month]
+        respose_data = f"<h1>{challenge_text}</h1>"
+        return HttpResponse(respose_data)
+    except:
+        return HttpResponse("<h1>this month is not supported</h1>")
