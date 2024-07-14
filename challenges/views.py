@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+from django.http import Http404, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
 from django.template.loader import render_to_string
 
@@ -38,6 +38,7 @@ mothly_challenges = {
     "feb": "starting a workouts",
     "mar": "walking",
     "apr": "breathing",
+    "may ": None,
 }
 
 
@@ -51,6 +52,7 @@ def mothly_challenge_by_number(request, month):
 def monthly_challenge(request, month):
     try:
         challenge_text = mothly_challenges[month]
+        print(challenge_text)
         return render(request, "challenges/challenge.html", {
             "month_name": month,
             "text": challenge_text,
@@ -58,4 +60,4 @@ def monthly_challenge(request, month):
         # respose_data = render_to_string("challenges/challenge.html")
         # return HttpResponse(respose_data)
     except:
-        return HttpResponse("<h1>this month is not supported</h1>")
+        raise Http404()
